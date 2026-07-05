@@ -20,7 +20,10 @@ export const onRequest = defineMiddleware(async (context, next) => {
 
   const url = new URL(context.request.url);
   if (url.pathname.startsWith('/app') && !session) {
-    return context.redirect('/login');
+    // Funnel through the same gateway every /app/*.astro page's own guard
+    // uses (`/auth/login`) rather than duplicating the
+    // AUTH_PROVIDER-vs-WorkOS decision here — see auth/login.astro.
+    return context.redirect('/auth/login');
   }
   return next();
 });
