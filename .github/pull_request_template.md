@@ -14,5 +14,5 @@ Closes #
 - [ ] One logical change; matches the surrounding code style.
 - [ ] Ran the relevant checks (`pnpm install`, build, `pnpm test`) for what I touched.
 - [ ] Commits are signed off for the DCO (`git commit -s`).
-- [ ] This is a **core** change — not enterprise-adjacent (graph / meetings / org-IAM-SSO / audit-admin) and not in the licensing or carve machinery.
-- [ ] **I understand changes ship via the port-and-carve flow** — this PR is not GitHub-merged; once approved it's ported into the source-of-truth with my authorship preserved and closed with a link to the release.
+- [ ] This is a **core** change — not enterprise-adjacent (graph / meetings / org-IAM-SSO / audit-admin) and not in the licensing/release machinery.
+- [ ] **I understand this PR is merged here on GitHub** once approved (authorship + DCO preserved) and ships in the next tagged release.

@@ -11,7 +11,7 @@
  *      the Ed25519 signature against the baked-in public key and CREATE the row
  *      from the key's own payload. Zero outbound calls — airgap-friendly.
  *
- * NOTE: this used to live inside routes/admin (ee, carve-stripped), which silently
+ * NOTE: this used to live inside routes/admin (ee, not built into open-core), which silently
  * removed redemption from the public build. It belongs in core: a self-hoster who
  * receives a community key must be able to redeem it.
  */

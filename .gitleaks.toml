@@ -1,4 +1,4 @@
-# gitleaks config for Mnema (used by the carve §7 secret gate and CI).
+# gitleaks config for Mnema (used by the CI secret gate).
 # Extends the default ruleset; allowlists LS-1-triaged false positives only.
 [extend]
 useDefault = true

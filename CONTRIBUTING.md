@@ -3,22 +3,20 @@
 Thanks for your interest in improving Mnema. This document covers how to
 contribute and the licensing terms your contributions are made under.
 
-## How this repo is published (please read)
+## How this repo works (please read)
 
-This public repository is a **generated artifact**. The source of truth is a
-separate private repository that holds the full product (core + enterprise
-modules); this public repo is produced from it by an automated "carve" that strips
-the enterprise code, then **force-pushed** as squashed releases. Two consequences,
-stated plainly so nothing surprises you:
+This is the **open-core (public) edition** of Mnema — the core product. The
+enterprise modules (graph / meetings / org-IAM-SSO / audit-admin) are **not** in
+this repo; they live in a separate private repository. This repo is a normal
+GitHub repository:
 
-- **Your PR is reviewed here on GitHub, then ported into the private source** with
-  your authorship and sign-off preserved (see the DCO below), and it ships in the
-  next carve. We'll keep you posted on the PR.
-- Because releases are force-pushed, **contributor branches and history will show
-  as force-pushed-over** — that's expected, not a mistake or a lost commit.
+- **Your PR is reviewed and merged here, on GitHub**, with your authorship + DCO
+  sign-off preserved. History on `main` is stable — no force-pushing.
+- Releases are cut as **immutable, signed `vX.Y.Z` tags** with GitHub Releases —
+  see [`RELEASING.md`](./RELEASING.md). Self-hosters pin to a release tag.
 
-If that model doesn't work for a change you have in mind, open an issue first and
-we'll figure out the right path.
+If a change you have in mind touches enterprise-only surface, open an issue first
+and we'll figure out the right path.
 
 ## Ground rules
 
@@ -58,7 +56,7 @@ You contribute by forking and opening a pull request — nobody but the release 
 3. `pnpm install`, then run the checks above for what you touched (including `pnpm test`).
 4. Push to your fork and open a PR against `nbkdoesntknowcoding/mnema:main`.
 
-**What happens to your PR:** it is **not** merged on GitHub. Once approved, we port it into our private source-of-truth with your authorship + a `Co-authored-by` line preserved; it ships in the next release carve, and your PR is then closed **with a link to that release**. History on `main` showing as force-pushed-over is normal — your credited commit is safe.
+**What happens to your PR:** once approved, it is **merged here on GitHub** with your authorship + sign-off preserved, and ships in the next tagged release (you'll get a link to it). History on `main` is stable — your credited commit stays exactly where it landed.
 
 ## The core / enterprise boundary
 
@@ -109,8 +107,8 @@ To keep reviews fast and the core clean, these get sent back:
 - **Enterprise-adjacent changes.** Anything that belongs behind the enterprise seam
   (graph engine, meetings, org/IAM/SSO, audit/admin) — see the boundary section
   above. Core must build and boot with enterprise absent.
-- **Licensing / publishing machinery.** The carve pipeline, license-key mechanics,
-  and community-license service are maintained by the team; PRs there won't land.
+- **Licensing / release machinery.** License-key mechanics, the community-license
+  service, and the release/signing process are maintained by the team; PRs there won't land.
 - **Dependency churn.** New dependencies or version bumps without a clear,
   discussed reason.
 - **Drive-by refactors.** Formatting sweeps, renames, or restructuring bundled into
@@ -139,4 +137,4 @@ your first PR here:
 ## Reporting security issues
 
 Do **not** open a public issue for security vulnerabilities. See
-[SECURITY.md](./SECURITY.md) if present, or contact the maintainer privately.
+[SECURITY.md](./SECURITY.md) for how to report one privately.

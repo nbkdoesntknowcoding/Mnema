@@ -1,7 +1,7 @@
 /**
  * Which /app pages exist in this build.
  *
- * The open-core carve ships without the enterprise pages (graph, meetings,
+ * The open-core build ships without the enterprise pages (graph, meetings,
  * admin) while the private source-of-truth has them. `import.meta.glob` is
  * resolved at build time, so route presence is read off the pages actually in
  * the tree — the same Sidebar works in both builds with no per-build config.

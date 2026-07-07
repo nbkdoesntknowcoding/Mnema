@@ -1,4 +1,4 @@
-# Mnema — self-host stack (carved to the public repo root as docker-compose.yml).
+# Mnema — self-host stack (the public self-host stack, at the repo root).
 #
 # Paths are ROOT-relative because this file ships at the repo root. To run it from
 # its authored location in-repo (Mnema-PR) use --project-directory:

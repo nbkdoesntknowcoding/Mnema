@@ -22,7 +22,7 @@ const auth = Astro.locals.auth;
 const userInitial = (email?.[0] ?? auth?.email?.[0] ?? 'U').toUpperCase();
 const isAdmin = false; // admin is an enterprise feature
 
-// Sidebar rows for pages this build may not ship (the open-core carve omits
+// Sidebar rows for pages this build may not ship (the open-core build omits
 // the enterprise pages) — presence is read off the built routes.
 const navRoutes = {
   graph: hasAppRoute('graph'),

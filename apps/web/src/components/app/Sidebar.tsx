@@ -12,7 +12,7 @@ interface Props {
   };
   isAdmin?: boolean;
   /** Presence of /app routes whose pages may be absent from this build (the
-   *  open-core carve omits the enterprise pages). Computed server-side by the
+   *  open-core build omits the enterprise pages). Computed server-side by the
    *  layouts via lib/app-routes.ts; omitted keys default to visible so call
    *  sites that don't pass it keep today's behavior. */
   routes?: { graph?: boolean; meetings?: boolean; admin?: boolean };

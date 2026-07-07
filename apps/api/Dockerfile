@@ -1,5 +1,5 @@
 # ── Build stage ───────────────────────────────────────────────────────────────
-FROM node:22-alpine AS builder
+FROM node:22-alpine@sha256:16e22a550f3863206a3f701448c45f7912c6896a62de43add43bb9c86130c3e2 AS builder
 
 RUN corepack enable && corepack prepare pnpm@10.23.0 --activate
 
@@ -26,7 +26,7 @@ RUN pnpm --filter @boppl/schema build
 RUN pnpm --filter @boppl/api build
 
 # ── Runtime stage ─────────────────────────────────────────────────────────────
-FROM node:22-alpine AS runner
+FROM node:22-alpine@sha256:16e22a550f3863206a3f701448c45f7912c6896a62de43add43bb9c86130c3e2 AS runner
 
 RUN corepack enable && corepack prepare pnpm@10.23.0 --activate
 
@@ -55,6 +55,13 @@ COPY apps/api/src/emails/html ./apps/api/dist/emails/html
 
 HEALTHCHECK --interval=10s --timeout=5s --retries=12 --start-period=40s \
   CMD node -e "fetch('http://localhost:8080/health').then(r => process.exit(r.ok?0:1)).catch(()=>process.exit(1))"
+
+# Run as the image's built-in unprivileged `node` user (uid 1000). /app is owned
+# by root after the COPYs above; hand it (and node's home for any transient
+# writes) to `node` so the runtime can write caches/tmp without root. Port 8080
+# is >1024, so the non-root bind is fine.
+RUN chown -R node:node /app
+USER node
 
 EXPOSE 8080
 ENV NODE_ENV=production

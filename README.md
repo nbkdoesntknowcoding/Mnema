@@ -72,6 +72,11 @@ proves it builds and boots with the enterprise modules entirely absent. Licensin
 
 ## Self-host notes
 
+- **Pin to a release tag.** For a stable deployment, check out a tagged release
+  rather than tracking `main`: `git fetch --tags && git checkout vX.Y.Z`, then
+  `docker compose up -d --build`. Release tags are immutable and signed; upgrade
+  by checking out a newer tag and rebuilding. See [RELEASING.md](./RELEASING.md)
+  and [CHANGELOG.md](./CHANGELOG.md).
 - **HTTPS / reverse proxy.** Behind TLS, expose the collab WebSocket as
   `wss://<your-host>/collab` (WebSocket upgrade enabled) and set
   `PUBLIC_COLLAB_URL=wss://<your-host>/collab`, then **rebuild the web app**

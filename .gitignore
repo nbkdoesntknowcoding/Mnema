@@ -28,7 +28,7 @@ __pycache__/
 realness_out/
 tests/mcp-setup/report.md
 
-# carved public repo (local artifact)
+# local scratch clone dir (not tracked)
 /mnema/
 
 # public-core hygiene (build cache + local tooling)

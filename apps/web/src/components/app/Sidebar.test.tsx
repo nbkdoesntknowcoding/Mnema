@@ -1,6 +1,6 @@
 /**
  * Route-presence gating for the sidebar: rows whose pages aren't in this
- * build (enterprise pages are carved out of open-core) must not render, and
+ * build (enterprise pages are excluded from open-core) must not render, and
  * call sites that don't pass `routes` must keep today's full sidebar.
  */
 import { describe, it, expect } from 'vitest';

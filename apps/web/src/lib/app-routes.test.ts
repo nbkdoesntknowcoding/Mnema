@@ -1,6 +1,6 @@
 /**
  * Route-presence gate for sidebar nav rows: rows must only render for pages
- * that exist in this build (the open-core carve omits the enterprise pages).
+ * that exist in this build (the open-core build omits the enterprise pages).
  * Asserts the mechanism, not a fixed page list, so the same test passes in
  * builds that do ship the extra pages.
  */
