@@ -12,14 +12,6 @@ annotated, signed tags on `main` — see [RELEASING.md](./RELEASING.md).
 
 ## [Unreleased]
 
-### Added
-
-- Community-health and compliance documentation: `SECURITY.md`,
-  `CODE_OF_CONDUCT.md`, `SUPPORT.md`, `MAINTAINERS.md`, `GOVERNANCE.md`,
-  `RELEASING.md`, this changelog, and GitHub issue-form templates.
-- Dependabot configuration (npm, GitHub Actions, Docker) and hardened CI
-  workflows (least-privilege `permissions`, actions pinned to commit SHAs).
-
 ## [0.1.0] — 2026-07-07
 
 First public snapshot of the Mnema open core. Summarizes the current state of
@@ -39,6 +31,11 @@ what this repository ships.
 - **Developer platform.** REST API + API keys to embed Mnema in your own app.
 - **Self-host.** Single-command Docker Compose stack (postgres, redis, api,
   collab, workers, web); idempotent migrations on first boot.
+- Community-health and compliance documentation: `SECURITY.md`,
+  `CODE_OF_CONDUCT.md`, `SUPPORT.md`, `MAINTAINERS.md`, `GOVERNANCE.md`,
+  `RELEASING.md`, this changelog, and GitHub issue-form templates.
+- Dependabot configuration (npm, GitHub Actions, Docker) and hardened CI
+  workflows (least-privilege `permissions`, actions pinned to commit SHAs).
 
 [Unreleased]: https://github.com/nbkdoesntknowcoding/mnema/compare/v0.1.0...HEAD
 [0.1.0]: https://github.com/nbkdoesntknowcoding/mnema/releases/tag/v0.1.0
