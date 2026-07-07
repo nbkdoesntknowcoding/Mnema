@@ -6,6 +6,9 @@ on:
   pull_request:
     branches: [main, staging]
 
+permissions:
+  contents: read
+
 jobs:
   test:
     name: Lint, typecheck, tests
@@ -65,13 +68,13 @@ jobs:
       GEMINI_API_KEY: ci_dummy_key_not_used_due_to_mock
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
 
-      - uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v4.4.0
         with:
           version: 10.23.0
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: '22'
           cache: 'pnpm'
@@ -164,7 +167,7 @@ jobs:
       cancel-in-progress: false
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
 
       - name: Write SSH deploy key
         run: |
@@ -173,7 +176,7 @@ jobs:
           chmod 600 ~/.ssh/deploy_key
 
       - name: Deploy to VPS (with retry)
-        uses: nick-fields/retry@v3
+        uses: nick-fields/retry@ce71cc2ab81d554ebbe88c79ab5975992d79ba08 # v3.0.2
         with:
           timeout_minutes: 25
           max_attempts: 4

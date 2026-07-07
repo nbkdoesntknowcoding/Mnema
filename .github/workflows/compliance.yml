@@ -1,0 +1,51 @@
+# Compliance gate: dependency-license policy on every relevant PR, and a Trivy
+# image scan on release tags. Part of CH-1 (Master Patch #5, #9). Actions are
+# SHA-pinned (Master Patch #14).
+name: Compliance
+
+on:
+  pull_request:
+    paths:
+      - '**/package.json'
+      - 'pnpm-lock.yaml'
+      - '**/Dockerfile*'
+      - 'scripts/check-licenses.mjs'
+      - 'infra/docker-compose.prod.yml'
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  license-gate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+      - uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v4.4.0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: License policy gate
+        run: node scripts/check-licenses.mjs
+
+  image-scan:
+    # Shipped-image CVE scan — only on release tags or manual run (building the
+    # image is heavy). Fails on fixable HIGH/CRITICAL. Mirrors scripts/scan-images.sh.
+    if: startsWith(github.ref, 'refs/tags/') || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+      - name: Build api image
+        run: docker build -f apps/api/Dockerfile -t mnema-api:scan .
+      - name: Trivy scan (api)
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
+        with:
+          image-ref: mnema-api:scan
+          severity: HIGH,CRITICAL
+          ignore-unfixed: true
+          exit-code: '1'

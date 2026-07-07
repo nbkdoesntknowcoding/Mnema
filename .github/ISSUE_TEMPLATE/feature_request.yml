@@ -1,0 +1,41 @@
+name: Feature request
+description: Suggest something the Mnema core should do.
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for the idea. A quick note on scope: this repo is the **open core**.
+        Enterprise-adjacent capabilities (knowledge graph, meeting intelligence,
+        org/IAM+SSO, audit/admin, multi-workspace) live in a separate repository
+        and aren't part of this project — see the core/enterprise boundary in
+        [CONTRIBUTING.md](https://github.com/nbkdoesntknowcoding/mnema/blob/main/CONTRIBUTING.md).
+        If you're unsure which side a feature belongs on, open it here and we'll
+        point you the right way.
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem are you trying to solve?
+      description: Describe the need, not just the solution. What can't you do today?
+      placeholder: When I ..., I have no way to ...
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+      description: What you'd like Mnema to do.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Workarounds you've tried or other approaches you weighed.
+  - type: checkboxes
+    id: contribute
+    attributes:
+      label: Contribution
+      options:
+        - label: I'd be willing to help implement this (see CONTRIBUTING.md).
+          required: false

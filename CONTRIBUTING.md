@@ -139,4 +139,4 @@ your first PR here:
 ## Reporting security issues
 
 Do **not** open a public issue for security vulnerabilities. See
-[SECURITY.md](./SECURITY.md) if present, or contact the maintainer privately.
+[SECURITY.md](./SECURITY.md) for how to report one privately.

@@ -1,0 +1,50 @@
+name: Self-host / setup help
+description: You're stuck getting Mnema running or connected.
+labels: ["self-host", "question"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Before opening this, please check the **Troubleshooting (self-host)**
+        section of the [README](https://github.com/nbkdoesntknowcoding/mnema/blob/main/README.md) —
+        the common cases (disconnected documents on HTTPS, ports already
+        allocated, `PUBLIC_*` vars not taking effect, first-boot gating) are
+        covered there with fixes.
+  - type: textarea
+    id: goal
+    attributes:
+      label: What are you trying to do?
+      description: What you're setting up and where it's getting stuck.
+      placeholder: I'm self-hosting behind Caddy and documents show "disconnected" ...
+    validations:
+      required: true
+  - type: dropdown
+    id: deployment
+    attributes:
+      label: How are you deploying?
+      options:
+        - Docker Compose (self-host quickstart)
+        - Docker Compose behind a reverse proxy / HTTPS
+        - Local dev (pnpm, outside Docker)
+        - Other (describe below)
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Version / commit
+      description: The release tag or commit SHA you're running.
+      placeholder: e.g. v0.1.0 or 3c6cfb7
+    validations:
+      required: true
+  - type: textarea
+    id: tried
+    attributes:
+      label: What have you tried?
+      description: Steps already taken, and anything from the README troubleshooting you've ruled out.
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs / output
+      description: Relevant output (e.g. `docker compose ps`, `docker compose logs -f migrate api`). Automatically formatted.
+      render: shell
