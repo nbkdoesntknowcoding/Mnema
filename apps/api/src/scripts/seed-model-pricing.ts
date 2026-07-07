@@ -2,7 +2,7 @@
  * Seed model pricing table with current Anthropic Claude pricing.
  * Run: npx tsx src/scripts/seed-model-pricing.ts
  *
- * NOTE: migration 0066 seeds the current-generation models automatically on
+ * NOTE: migration 0069 seeds the current-generation models automatically on
  * every fresh install — this script is the manual refresh path for price
  * changes and for keeping legacy model rows around for historical sessions.
  *
