@@ -265,6 +265,8 @@ export function TaskDetailModal({ task, onClose, onSave, onDelete }: TaskDetailM
 
             {/* Editable Title */}
             <input
+              aria-label="Task title"
+              placeholder="Task title"
               value={editTitle}
               onChange={(e) => setEditTitle(e.target.value)}
               style={{
@@ -650,6 +652,7 @@ export function TaskDetailModal({ task, onClose, onSave, onDelete }: TaskDetailM
               ))}
               <div style={{ display: 'flex', gap: 8 }}>
                 <input
+                  aria-label="Add a comment"
                   value={commentDraft}
                   onChange={(e) => setCommentDraft(e.target.value)}
                   onKeyDown={(e) => { if (e.key === 'Enter') void postComment(); }}
