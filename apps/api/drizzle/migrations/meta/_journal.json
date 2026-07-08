@@ -7,300 +7,503 @@
       "version": "7",
       "when": 1747200000000,
       "tag": "0000_initial_schema",
-      "breakpoints": false
+      "breakpoints": true
     },
     {
       "idx": 1,
       "version": "7",
       "when": 1747286400000,
       "tag": "0001_app_user_role",
-      "breakpoints": false
+      "breakpoints": true
     },
     {
       "idx": 2,
       "version": "7",
       "when": 1747987200000,
       "tag": "0002_invitations_and_system_role",
-      "breakpoints": false
+      "breakpoints": true
     },
     {
       "idx": 3,
       "version": "7",
-      "when": 1747987200001,
-      "tag": "0003_workspace_members_rls_and_public_lookup",
-      "breakpoints": false
+      "when": 1748087200000,
+      "tag": "0002_mixed_legion",
+      "breakpoints": true
     },
     {
       "idx": 4,
       "version": "7",
-      "when": 1778889600000,
-      "tag": "0004_comments_threads_versions_read_state",
-      "breakpoints": false
+      "when": 1748187200000,
+      "tag": "0003_workspace_members_rls_and_public_lookup",
+      "breakpoints": true
     },
     {
       "idx": 5,
       "version": "7",
-      "when": 1779373156544,
-      "tag": "0005_doc_type",
-      "breakpoints": false
+      "when": 1778889600000,
+      "tag": "0004_comments_threads_versions_read_state",
+      "breakpoints": true
     },
     {
       "idx": 6,
       "version": "7",
-      "when": 1779373156545,
-      "tag": "0006_flows_v1",
-      "breakpoints": false
+      "when": 1779373156544,
+      "tag": "0005_doc_type",
+      "breakpoints": true
     },
     {
       "idx": 7,
       "version": "7",
-      "when": 1779373156546,
-      "tag": "0007_example_flow_backfill",
-      "breakpoints": false
+      "when": 1779373156545,
+      "tag": "0006_flows_v1",
+      "breakpoints": true
     },
     {
       "idx": 8,
       "version": "7",
-      "when": 1779373156547,
-      "tag": "0008_folders",
-      "breakpoints": false
+      "when": 1779373156546,
+      "tag": "0007_example_flow_backfill",
+      "breakpoints": true
     },
     {
       "idx": 9,
       "version": "7",
-      "when": 1779373156548,
-      "tag": "0009_folder_nesting",
-      "breakpoints": false
+      "when": 1779373156547,
+      "tag": "0008_folders",
+      "breakpoints": true
     },
     {
       "idx": 10,
       "version": "7",
-      "when": 1779373156549,
-      "tag": "0010_mcp_tokens",
-      "breakpoints": false
+      "when": 1779373156548,
+      "tag": "0009_folder_nesting",
+      "breakpoints": true
     },
     {
       "idx": 11,
       "version": "7",
-      "when": 1779373156550,
-      "tag": "0011_oauth_v1",
-      "breakpoints": false
+      "when": 1779373156549,
+      "tag": "0010_mcp_tokens",
+      "breakpoints": true
     },
     {
       "idx": 12,
       "version": "7",
-      "when": 1779373156551,
-      "tag": "0012_folders_soft_delete",
-      "breakpoints": false
+      "when": 1779373156550,
+      "tag": "0011_oauth_v1",
+      "breakpoints": true
     },
     {
       "idx": 13,
       "version": "7",
-      "when": 1779373156552,
-      "tag": "0013_doc_versions_author_kind",
-      "breakpoints": false
+      "when": 1779373156551,
+      "tag": "0012_folders_soft_delete",
+      "breakpoints": true
     },
     {
       "idx": 14,
       "version": "7",
-      "when": 1779450000000,
-      "tag": "0014_notifications",
-      "breakpoints": false
+      "when": 1779373156552,
+      "tag": "0013_doc_versions_author_kind",
+      "breakpoints": true
     },
     {
       "idx": 15,
       "version": "7",
-      "when": 1748217600000,
-      "tag": "0015_subscriptions_billing_tier",
-      "breakpoints": false
+      "when": 1779450000000,
+      "tag": "0014_notifications",
+      "breakpoints": true
     },
     {
       "idx": 16,
       "version": "7",
-      "when": 1748649600000,
-      "tag": "0016_agentlens_phase1_tasks",
-      "breakpoints": false
+      "when": 1779550000000,
+      "tag": "0015_subscriptions_billing_tier",
+      "breakpoints": true
     },
     {
       "idx": 17,
       "version": "7",
-      "when": 1748736000000,
-      "tag": "0017_agentlens_phase2_execution",
-      "breakpoints": false
+      "when": 1779650000000,
+      "tag": "0016_agentlens_phase1_tasks",
+      "breakpoints": true
     },
     {
       "idx": 18,
       "version": "7",
-      "when": 1748822400000,
-      "tag": "0018_agentlens_phase3_intelligence",
-      "breakpoints": false
+      "when": 1779750000000,
+      "tag": "0017_agentlens_phase2_execution",
+      "breakpoints": true
     },
     {
       "idx": 19,
       "version": "7",
-      "when": 1748908800000,
-      "tag": "0019_phase4_api_keys",
-      "breakpoints": false
+      "when": 1779850000000,
+      "tag": "0018_agentlens_phase3_intelligence",
+      "breakpoints": true
     },
     {
       "idx": 20,
       "version": "7",
-      "when": 1748995200000,
-      "tag": "0020_optimization_materialized_view",
-      "breakpoints": false
+      "when": 1779950000000,
+      "tag": "0019_phase4_api_keys",
+      "breakpoints": true
     },
     {
       "idx": 21,
       "version": "7",
-      "when": 1748995200001,
-      "tag": "0021_doc_sharing",
-      "breakpoints": false
+      "when": 1780050000000,
+      "tag": "0020_optimization_materialized_view",
+      "breakpoints": true
     },
     {
       "idx": 22,
+      "version": "7",
+      "when": 1780150000000,
+      "tag": "0021_doc_sharing",
+      "breakpoints": true
+    },
+    {
+      "idx": 23,
       "version": "7",
       "when": 1780931052462,
       "tag": "0022_exotic_maggott",
       "breakpoints": true
     },
     {
-      "idx": 23,
+      "idx": 24,
       "version": "7",
       "when": 1781103290439,
       "tag": "0023_daffy_thunderball",
       "breakpoints": true
     },
     {
-      "idx": 24,
+      "idx": 25,
       "version": "7",
       "when": 1781187719341,
       "tag": "0024_knowledge_graph_schema",
       "breakpoints": true
     },
     {
-      "idx": 25,
+      "idx": 26,
       "version": "7",
       "when": 1781280000000,
       "tag": "0025_project_scoping",
       "breakpoints": true
     },
     {
-      "idx": 26,
+      "idx": 27,
       "version": "7",
       "when": 1781280000001,
       "tag": "0026_waitlist",
       "breakpoints": true
     },
     {
-      "idx": 27,
+      "idx": 28,
       "version": "7",
       "when": 1781280000002,
       "tag": "0027_project_members_and_key_scope",
       "breakpoints": true
     },
     {
-      "idx": 28,
+      "idx": 29,
       "version": "7",
       "when": 1781280000003,
       "tag": "0028_project_rls_functions",
       "breakpoints": true
     },
     {
-      "idx": 29,
+      "idx": 30,
       "version": "7",
       "when": 1781280000004,
       "tag": "0029_project_rls_policies",
       "breakpoints": true
     },
     {
-      "idx": 30,
+      "idx": 31,
       "version": "7",
       "when": 1781280000005,
       "tag": "0030_api_key_act_as_user",
       "breakpoints": true
     },
     {
-      "idx": 31,
+      "idx": 32,
       "version": "7",
       "when": 1781280000006,
       "tag": "0031_participant_aliases",
       "breakpoints": true
     },
     {
-      "idx": 32,
+      "idx": 33,
       "version": "7",
       "when": 1781280000007,
       "tag": "0032_meetings",
       "breakpoints": true
     },
     {
-      "idx": 33,
+      "idx": 34,
       "version": "7",
       "when": 1781280000008,
       "tag": "0033_meeting_participant_verified",
       "breakpoints": true
     },
     {
-      "idx": 34,
+      "idx": 35,
       "version": "7",
       "when": 1781280000009,
       "tag": "0034_teams_org_roles",
       "breakpoints": true
     },
     {
-      "idx": 35,
+      "idx": 36,
       "version": "7",
       "when": 1781280000010,
       "tag": "0035_user_org_profiles",
       "breakpoints": true
     },
     {
-      "idx": 36,
+      "idx": 37,
       "version": "7",
       "when": 1781280000011,
       "tag": "0036_doc_acl_matrix",
       "breakpoints": true
     },
     {
-      "idx": 37,
+      "idx": 38,
       "version": "7",
       "when": 1781280000012,
       "tag": "0037_iam_audit_log",
       "breakpoints": true
     },
     {
-      "idx": 38,
+      "idx": 39,
       "version": "7",
       "when": 1781280000013,
       "tag": "0038_meeting_schema_additions",
       "breakpoints": true
     },
     {
-      "idx": 39,
+      "idx": 40,
       "version": "7",
       "when": 1781280000014,
       "tag": "0039_folders_system_type",
       "breakpoints": true
     },
     {
-      "idx": 40,
+      "idx": 41,
       "version": "7",
       "when": 1781280000015,
       "tag": "0040_invitations_org_role",
       "breakpoints": true
     },
     {
-      "idx": 41,
+      "idx": 42,
       "version": "7",
       "when": 1782000000000,
       "tag": "0041_calendar_phase_c",
       "breakpoints": true
     },
     {
-      "idx": 42,
+      "idx": 43,
       "version": "7",
       "when": 1782100000000,
       "tag": "0042_flow_share",
+      "breakpoints": true
+    },
+    {
+      "idx": 44,
+      "version": "7",
+      "when": 1782200000000,
+      "tag": "0043_graph_entity_id_text",
+      "breakpoints": true
+    },
+    {
+      "idx": 45,
+      "version": "7",
+      "when": 1782300000000,
+      "tag": "0044_matview_owner",
+      "breakpoints": true
+    },
+    {
+      "idx": 46,
+      "version": "7",
+      "when": 1782400000000,
+      "tag": "0045_meeting_transcripts_summary",
+      "breakpoints": true
+    },
+    {
+      "idx": 47,
+      "version": "7",
+      "when": 1782500000000,
+      "tag": "0046_tasks_meeting_link",
+      "breakpoints": true
+    },
+    {
+      "idx": 48,
+      "version": "7",
+      "when": 1782600000000,
+      "tag": "0047_admin",
+      "breakpoints": true
+    },
+    {
+      "idx": 49,
+      "version": "7",
+      "when": 1782700000000,
+      "tag": "0048_app_acl_permits",
+      "breakpoints": true
+    },
+    {
+      "idx": 50,
+      "version": "7",
+      "when": 1782800000000,
+      "tag": "0049_rls_doc_acl",
+      "breakpoints": true
+    },
+    {
+      "idx": 51,
+      "version": "7",
+      "when": 1782900000000,
+      "tag": "0050_doc_access_requests",
+      "breakpoints": true
+    },
+    {
+      "idx": 52,
+      "version": "7",
+      "when": 1783000000000,
+      "tag": "0051_workspace_admin_narrow",
+      "breakpoints": true
+    },
+    {
+      "idx": 53,
+      "version": "7",
+      "when": 1783100000000,
+      "tag": "0052_effective_permission_expiry",
+      "breakpoints": true
+    },
+    {
+      "idx": 54,
+      "version": "7",
+      "when": 1783200000000,
+      "tag": "0053_docs_rls_doc_level_acl",
+      "breakpoints": true
+    },
+    {
+      "idx": 55,
+      "version": "7",
+      "when": 1783300000000,
+      "tag": "0054_rls_all_principals",
+      "breakpoints": true
+    },
+    {
+      "idx": 56,
+      "version": "7",
+      "when": 1783400000000,
+      "tag": "0055_access_requests_partial_unique",
+      "breakpoints": true
+    },
+    {
+      "idx": 57,
+      "version": "7",
+      "when": 1783500000000,
+      "tag": "0056_doc_acl_constraint_name",
+      "breakpoints": true
+    },
+    {
+      "idx": 58,
+      "version": "7",
+      "when": 1783600000000,
+      "tag": "0057_meeting_records",
+      "breakpoints": true
+    },
+    {
+      "idx": 59,
+      "version": "7",
+      "when": 1783700000000,
+      "tag": "0058_decision_temporal_node",
+      "breakpoints": true
+    },
+    {
+      "idx": 60,
+      "version": "7",
+      "when": 1783800000000,
+      "tag": "0059_decision_proposed_status",
+      "breakpoints": true
+    },
+    {
+      "idx": 61,
+      "version": "7",
+      "when": 1783900000000,
+      "tag": "0060_decision_approvals",
+      "breakpoints": true
+    },
+    {
+      "idx": 62,
+      "version": "7",
+      "when": 1784000000000,
+      "tag": "0061_datasets",
+      "breakpoints": true
+    },
+    {
+      "idx": 63,
+      "version": "7",
+      "when": 1784100000000,
+      "tag": "0062_workspace_join_requests",
+      "breakpoints": true
+    },
+    {
+      "idx": 64,
+      "version": "7",
+      "when": 1784200000000,
+      "tag": "0063_workspace_credentials",
+      "breakpoints": true
+    },
+    {
+      "idx": 65,
+      "version": "7",
+      "when": 1784300000000,
+      "tag": "0064_flow_versions_workspace_id",
+      "breakpoints": true
+    },
+    {
+      "idx": 66,
+      "version": "7",
+      "when": 1784400000000,
+      "tag": "0065_community_registrations",
+      "breakpoints": true
+    },
+    {
+      "idx": 67,
+      "version": "7",
+      "when": 1784500000000,
+      "tag": "0066_flow_nodes_capture_kind",
+      "breakpoints": true
+    },
+    {
+      "idx": 68,
+      "version": "7",
+      "when": 1784600000000,
+      "tag": "0067_flow_runs",
+      "breakpoints": true
+    },
+    {
+      "idx": 69,
+      "version": "7",
+      "when": 1784700000000,
+      "tag": "0068_flow_run_step_io",
+      "breakpoints": true
+    },
+    {
+      "idx": 70,
+      "version": "7",
+      "when": 1784800000000,
+      "tag": "0069_seed_model_pricing",
+      "breakpoints": true
+    },
+    {
+      "idx": 71,
+      "version": "7",
+      "when": 1784900000000,
+      "tag": "0070_task_comments",
       "breakpoints": true
     }
   ]
