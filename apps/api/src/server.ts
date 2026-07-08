@@ -1,9 +1,12 @@
 import cors from '@fastify/cors';
 import helmet from '@fastify/helmet';
+import rateLimit from '@fastify/rate-limit';
 import sensible from '@fastify/sensible';
+import type { FastifyRequest } from 'fastify';
 import Fastify from 'fastify';
 import { config } from './config/env.js';
 import { initSentry, Sentry } from './lib/sentry.js';
+import { redis } from './plugins/redis.js';
 
 // Initialise Sentry before anything else — no-op when SENTRY_DSN is unset.
 initSentry();
@@ -80,6 +83,54 @@ await app.register(cors, {
   credentials: true,
 });
 await app.register(sensible);
+
+// Global rate-limit — a coarse DoS backstop layered OVER the fine-grained,
+// hand-rolled per-route limiters (auth-rate-limit.ts, routes/complete/rate-limit.ts).
+// The ceiling is deliberately generous so it never trips legitimate API/MCP/internal
+// traffic; it only exists to blunt abusive floods and to satisfy CodeQL's
+// js/missing-rate-limiting alert (every route now sits behind a global limiter).
+//
+// - skipOnError: true  → fail-open; a limiter/Redis fault must never 500 the API.
+// - redis: shared client → counters coordinate across replicas (self-hosters with
+//   >1 API instance get a single shared budget instead of per-process ceilings).
+// - keyGenerator prefers the authenticated subject (per-user budget) and falls back
+//   to the client IP for unauthenticated / bearer-only (MCP, _internal) traffic.
+// - allowList exempts high-volume server-to-server + real-time paths that have their
+//   own auth and traffic characteristics and must not be capped by this coarse gate.
+await app.register(rateLimit, {
+  global: true,
+  max: 1000,
+  timeWindow: '1 minute',
+  skipOnError: true,
+  redis,
+  keyGenerator: (req: FastifyRequest) => {
+    // Prefer the authenticated subject so one noisy user can't exhaust another's
+    // budget; fall back to client IP. NOTE: this plugin runs on the `onRequest`
+    // hook, which fires BEFORE authPlugin's `preHandler` populates req.auth, so
+    // in practice most requests key by IP today — the sub branch is a
+    // forward-safe default if auth ever moves to an onRequest hook. IP keying is
+    // the correct behaviour for a coarse DoS backstop regardless.
+    const sub = req.auth?.sub;
+    return sub ? `user:${sub}` : `ip:${req.ip}`;
+  },
+  allowList: (req: FastifyRequest) => {
+    const url = (req.url.split('?')[0] ?? '/');
+    // High-volume / real-time / server-to-server paths with their own auth:
+    //   /mcp*            — MCP tool traffic (Bearer-authenticated, bursty)
+    //   /api/_internal/* — server-to-server (meeting bot roster, webhooks, sessions)
+    //   /api/onlyoffice/ — OnlyOffice document-server callbacks
+    //   /api/hooks/      — Claude Code hook Bearer traffic
+    //   /health          — liveness/readiness probes
+    return (
+      url === '/health' ||
+      url.startsWith('/mcp') ||
+      url.startsWith('/api/_internal/') ||
+      url.startsWith('/api/onlyoffice/') ||
+      url.startsWith('/api/hooks/')
+    );
+  },
+});
+
 await app.register(authPlugin);
 await app.register(healthRoutes);
 await app.register(setSessionRoutes);
