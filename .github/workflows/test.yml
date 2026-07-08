@@ -99,6 +99,15 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      # Build the workspace libs the api depends on (mirrors CONTRIBUTING step 2).
+      # @boppl/schema exposes a "./node" subpath export that resolves to
+      # ./dist/node.js — the round-trip tests import it via
+      # src/tests/round-trip/helpers.ts. A clean checkout has no dist/, so
+      # without this step those tests fail with
+      # "Failed to load url @boppl/schema/node". @boppl/shared is built the same way.
+      - name: Build workspace packages
+        run: pnpm -r --filter "./packages/**" build
+
       # OAuth AS RSA keypair — required at config load (see env.ts). Generated
       # fresh per run into the paths referenced by OAUTH_*_KEY_PATH; never committed.
       - name: Generate test OAuth keypair
