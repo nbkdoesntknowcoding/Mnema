@@ -1,33 +1,38 @@
-# Dependabot config for the public mirror.
+# Dependabot config.
 #
-# Note: on this public repository, Dependabot security alerts and version-update
-# PRs live here directly — they are raised against this repo, not the private
-# source-of-truth. Update PRs are reviewed here like any other change.
+# Policy: minor/patch version-update PRs only (grouped), plus SECURITY updates.
+# Major version bumps are NOT auto-proposed — they carry breaking-change risk and
+# are done deliberately. The `version-update:semver-major` ignore scopes to VERSION
+# updates only, so Dependabot still opens PRs for CVEs even when the fix is a major.
 
 version: 2
 updates:
-  # JavaScript / TypeScript dependencies (pnpm workspace).
   - package-ecosystem: "npm"
     directory: "/"
     schedule:
       interval: "weekly"
     open-pull-requests-limit: 10
     groups:
-      # Batch low-risk minor + patch bumps into a single PR to cut noise.
       minor-and-patch:
         update-types:
           - "minor"
           - "patch"
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
 
-  # GitHub Actions used by our workflows (kept pinned to SHAs; Dependabot
-  # updates the SHA and the trailing version comment together).
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "weekly"
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
 
-  # Docker base images (docker-compose services / Dockerfiles).
   - package-ecosystem: "docker"
     directory: "/"
     schedule:
       interval: "weekly"
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
