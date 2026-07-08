@@ -13,7 +13,7 @@ cd "$(dirname "$0")/.."
 echo "== 1. core → gated static-import scan =="
 # Gated module paths. A core file importing any of these (outside src/ee/ and the
 # gated modules themselves) is a boundary violation to de-tangle.
-VIOLATIONS=$(grep -rnE "from '.*(routes/graph|routes/meetings|routes/org|routes/admin|lib/graph/|queue/graph|tools/graph|tools/meeting-context|meeting-end/worker|graph/worker)" src --include="*.ts" \
+VIOLATIONS=$(grep -rnE "from '.*(routes/graph|routes/meetings|routes/org|routes/admin|routes/razorpay|routes/billing|lib/razorpay/|lib/graph/|queue/graph|tools/graph|tools/meeting-context|meeting-end/worker|graph/worker)" src --include="*.ts" \
   | grep -v "/ee/" \
   | grep -vE "src/(routes/(graph|meetings|org|admin)|mcp/tools/(graph|meeting-context)|lib/graph/|queue/graph|workers/(graph|meeting-end))" \
   | grep -v "\.test\.ts" || true)

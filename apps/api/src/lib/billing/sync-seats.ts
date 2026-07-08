@@ -1,62 +1,24 @@
 /**
- * Seat sync utility.
+ * Seat sync utility (self-host / open-core edition).
  *
  * Called after any workspace membership change that could affect the
  * billable seat count (member added, removed, role changed).
  *
- * If the workspace has an active Razorpay subscription, this function
- * recounts billable writers and updates the subscription quantity via
- * the Razorpay API, then stores the new count in our DB.
- *
- * No-op if the workspace is on the free plan (no active subscription).
+ * The open-core (self-host) edition ships with NO payment/billing layer:
+ * there is no active subscription to reconcile, so this is a no-op. It
+ * remains an exported function so core callers (routes/members.ts,
+ * routes/invitations.ts, routes/_internal/accept-invite-pending.ts) keep
+ * their call sites unchanged. Hosted seat-sync lives outside this repo.
  */
-
-import { and, desc, eq, inArray } from 'drizzle-orm';
-import { db } from '../../db/index.js';
-import { subscriptions } from '../../db/schema.js';
-import { countBillableSeats } from './seats.js';
-
-const ACTIVE_STATUSES = ['active', 'trialing', 'created'] as const;
 
 /**
- * Re-count writer seats for the workspace and update the Razorpay
- * subscription quantity if one is active.
+ * Re-count writer seats and update the payment provider's subscription
+ * quantity when one is active.
  *
- * Safe to call redundantly — it will silently no-op on free workspaces.
+ * Self-host: always a no-op (no subscriptions, no payment provider).
+ * Safe to call redundantly.
  */
-export async function syncSubscriptionSeats(workspaceId: string): Promise<void> {
-  // Find the most recent active subscription
-  const subRows = await db
-    .select({
-      id: subscriptions.id,
-      razorpaySubscriptionId: subscriptions.razorpaySubscriptionId,
-      status: subscriptions.status,
-    })
-    .from(subscriptions)
-    .where(
-      and(
-        eq(subscriptions.workspaceId, workspaceId),
-        inArray(subscriptions.status, ACTIVE_STATUSES as unknown as string[]),
-      ),
-    )
-    .orderBy(desc(subscriptions.createdAt))
-    .limit(1);
-
-  if (subRows.length === 0) return; // free plan — nothing to sync
-
-  const { razorpaySubscriptionId } = subRows[0]!;
-  const billableSeats = await countBillableSeats(workspaceId);
-
-  // Update quantity on Razorpay subscription
-  const { razorpay } = await import('../razorpay/client.js');
-  await (razorpay.subscriptions.update(
-    razorpaySubscriptionId,
-    { quantity: billableSeats } as Parameters<typeof razorpay.subscriptions.update>[1],
-  ) as Promise<unknown>);
-
-  // Persist updated seat count locally
-  await db
-    .update(subscriptions)
-    .set({ billableSeats, quantity: billableSeats, updatedAt: new Date() })
-    .where(eq(subscriptions.razorpaySubscriptionId, razorpaySubscriptionId));
+export async function syncSubscriptionSeats(_workspaceId: string): Promise<void> {
+  // No billing layer in the open-core edition — nothing to sync.
+  return;
 }

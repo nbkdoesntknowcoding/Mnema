@@ -38,7 +38,6 @@ const COMMANDS: CommandItem[] = [
   { group: 'WORKSPACE', name: 'open settings', label: 'Open settings', kbd: ['⌘', ','], icon: 'settings', href: '/app/settings' },
   { group: 'FLOWS', name: 'walk flow', label: 'Walk a flow…', kbd: ['⌘', '⇧', 'F'], icon: 'play', href: '/app/flows' },
   { group: 'FLOWS', name: 'flow editor', label: 'Open flow editor', icon: 'edit', disabled: true, meta: 'SOON · 6.3' },
-  { group: 'SETTINGS', name: 'open billing', label: 'Open billing', icon: 'card', href: '/app/settings' },
   { group: 'SETTINGS', name: 'change theme', label: 'Change theme…', kbd: ['⌘', '⇧', 'T'], icon: 'moon' },
   { group: 'SETTINGS', name: 'sign out', label: 'Sign out', icon: 'logout', danger: true, href: '/auth/logout' },
   { group: 'CONNECTIONS', name: 'open claude', label: 'Open Claude connector', icon: 'claude', href: '/app/connections/claude' },

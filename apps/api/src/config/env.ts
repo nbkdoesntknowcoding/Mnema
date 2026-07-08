@@ -160,10 +160,13 @@ const envSchema = z.object({
   RATE_LIMIT_USER_PER_DAY: z.coerce.number().int().positive().default(1000),
   RATE_LIMIT_TENANT_DAILY_UNITS: z.coerce.number().int().positive().default(50000),
 
-  // Billing — Razorpay
-  RAZORPAY_KEY_ID: z.string().min(1),
-  RAZORPAY_KEY_SECRET: z.string().min(1),
-  RAZORPAY_WEBHOOK_SECRET: z.string().min(1),
+  // Billing — Razorpay. The open-core (self-host) edition ships with NO
+  // payment/billing layer, so these are optional and unused. They remain
+  // declared only so a hosted deployment that layers billing on top of core
+  // can supply them; on self-host leave them unset.
+  RAZORPAY_KEY_ID: z.string().min(1).optional(),
+  RAZORPAY_KEY_SECRET: z.string().min(1).optional(),
+  RAZORPAY_WEBHOOK_SECRET: z.string().min(1).optional(),
   RAZORPAY_ENVIRONMENT: z.enum(['test', 'live']).default('test'),
 
   // Recall.ai workspace verification secret (whsec_…) — signs the participant-events
