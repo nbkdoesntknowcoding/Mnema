@@ -48,7 +48,7 @@
     "@types/mime-types": "^3.0.1",
     "@types/turndown": "^5.0.6",
     "@workos-inc/node": "^10.7.0",
-    "ai": "^6.0.183",
+    "ai": "^7.0.16",
     "bullmq": "^5.76.8",
     "diff": "^9.0.0",
     "dompurify": "3.4.3",
