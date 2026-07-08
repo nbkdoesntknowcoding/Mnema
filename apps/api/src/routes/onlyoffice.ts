@@ -21,6 +21,32 @@ function jwtSecret(): Uint8Array {
   return new TextEncoder().encode(config.ONLYOFFICE_JWT_SECRET!);
 }
 
+// SSRF guard for the callback download URL — blocks loopback, link-local, and
+// cloud-metadata targets (169.254.169.254, etc). Private docker ranges stay
+// allowed because the OnlyOffice document server runs on one; the mandatory JWT
+// (below) is the primary control and this is defense-in-depth.
+function isSafeCallbackUrl(raw: string): boolean {
+  let u: URL;
+  try {
+    u = new URL(raw);
+  } catch {
+    return false;
+  }
+  if (u.protocol !== 'http:' && u.protocol !== 'https:') return false;
+  const host = u.hostname.toLowerCase().replace(/^\[|\]$/g, '');
+  if (host === 'localhost' || host.endsWith('.localhost')) return false;
+  const m = host.match(/^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/);
+  if (m) {
+    const a = Number(m[1]);
+    const b = Number(m[2]);
+    if (a === 0 || a === 127) return false; // this-host / loopback
+    if (a === 169 && b === 254) return false; // link-local incl. cloud metadata
+  }
+  if (host === '::1' || host.startsWith('fe80:') || host.startsWith('fc') || host.startsWith('fd')) return false;
+  if (host === '100.100.100.200') return false; // Alibaba metadata
+  return true;
+}
+
 export const onlyofficeRoutes: FastifyPluginAsync = async (app) => {
 
   // ── GET /api/onlyoffice/:attachmentId/config ─────────────────────────────
@@ -163,13 +189,20 @@ export const onlyofficeRoutes: FastifyPluginAsync = async (app) => {
       ? authHeader.slice(7)
       : body?.token;
 
-    if (jwtToken) {
-      try {
-        await jwtVerify(jwtToken, jwtSecret());
-      } catch {
-        req.log.warn({ attachmentId }, 'onlyoffice callback JWT verification failed');
-        return reply.status(403).send({ error: 1 });
-      }
+    // Require + verify the JWT. A genuine OnlyOffice callback ALWAYS carries it;
+    // making it mandatory (was: verify only when present) closes the unauthenticated
+    // SSRF path where an attacker omitted the token to skip verification and reach
+    // the fetch() below with an arbitrary URL. The secret is guaranteed set here
+    // (the handler returns early above when ONLYOFFICE_JWT_SECRET is absent).
+    if (!jwtToken) {
+      req.log.warn({ attachmentId }, 'onlyoffice callback missing JWT — rejected');
+      return reply.status(403).send({ error: 1 });
+    }
+    try {
+      await jwtVerify(jwtToken, jwtSecret());
+    } catch {
+      req.log.warn({ attachmentId }, 'onlyoffice callback JWT verification failed');
+      return reply.status(403).send({ error: 1 });
     }
 
     const status: number = body?.status ?? 0;
@@ -183,6 +216,12 @@ export const onlyofficeRoutes: FastifyPluginAsync = async (app) => {
     if (!downloadUrl) {
       req.log.error({ attachmentId, status }, 'onlyoffice callback missing url');
       return reply.send({ error: 0 });
+    }
+    // Defense-in-depth SSRF guard: never fetch loopback / link-local / metadata
+    // targets, even for a valid-token caller. (The mandatory JWT above is primary.)
+    if (!isSafeCallbackUrl(downloadUrl)) {
+      req.log.error({ attachmentId }, 'onlyoffice callback url rejected (unsafe host)');
+      return reply.status(400).send({ error: 1 });
     }
 
     try {
