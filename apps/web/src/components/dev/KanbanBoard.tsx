@@ -95,6 +95,40 @@ export function KanbanBoard({ workspaceId }: KanbanBoardProps): JSX.Element {
     }
   }, [selectedTask]);
 
+  // Horizontal board scroll: the columns live in a horizontally-scrollable grid
+  // while each column scrolls vertically on its own. A plain vertical mouse wheel
+  // therefore can't reach the right-most columns (e.g. "Done"), and macOS overlay
+  // scrollbars give no draggable affordance. Translate a vertical wheel into
+  // horizontal board scroll — but only once the column under the pointer can no
+  // longer scroll in that direction, so per-column vertical scrolling is intact.
+  const boardScrollRef = useRef<HTMLDivElement | null>(null);
+  useEffect(() => {
+    const el = boardScrollRef.current;
+    if (!el) return;
+    function onWheel(e: WheelEvent) {
+      const board = boardScrollRef.current;
+      if (!board) return;
+      if (board.scrollWidth <= board.clientWidth) return; // nothing to scroll sideways
+      if (e.deltaX !== 0) return;                          // trackpad already scrolling horizontally
+      // Walk up from the wheel target: if a column can still scroll vertically
+      // in this direction, let it — don't hijack.
+      let node = e.target as HTMLElement | null;
+      while (node && node !== board) {
+        const cs = getComputedStyle(node);
+        if ((cs.overflowY === 'auto' || cs.overflowY === 'scroll') && node.scrollHeight > node.clientHeight) {
+          const atTop = node.scrollTop <= 0;
+          const atBottom = Math.ceil(node.scrollTop + node.clientHeight) >= node.scrollHeight;
+          if (e.deltaY < 0 ? !atTop : !atBottom) return;
+        }
+        node = node.parentElement;
+      }
+      board.scrollLeft += e.deltaY;
+      e.preventDefault();
+    }
+    el.addEventListener('wheel', onWheel, { passive: false });
+    return () => { el.removeEventListener('wheel', onWheel); };
+  }, [loading, error]);
+
   // Check if banner was previously dismissed
   useEffect(() => {
     const dismissed = localStorage.getItem(`mnema_setup_banner_${workspaceId}`);
@@ -475,18 +509,34 @@ export function KanbanBoard({ workspaceId }: KanbanBoardProps): JSX.Element {
       )}
 
       {/* Columns — grid scroll container */}
-      <div style={{
-        display:          'grid',
-        gridAutoFlow:     'column',
-        gridAutoColumns:  '280px',
-        gap:              16,
-        flex:             1,
-        minHeight:        0,
-        overflowX:        'auto',
-        overflowY:        'hidden',
-        paddingBottom:    8,
-        alignItems:       'stretch',
-      }}>
+      <style>{`
+        .kanban-hscroll { scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.18) transparent; }
+        .kanban-hscroll::-webkit-scrollbar { height: 10px; }
+        .kanban-hscroll::-webkit-scrollbar-track { background: transparent; }
+        .kanban-hscroll::-webkit-scrollbar-thumb {
+          background: rgba(255,255,255,0.18);
+          border-radius: 8px;
+          border: 2px solid transparent;
+          background-clip: content-box;
+        }
+        .kanban-hscroll:hover::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.30); background-clip: content-box; }
+      `}</style>
+      <div
+        ref={boardScrollRef}
+        className="kanban-hscroll"
+        style={{
+          display:          'grid',
+          gridAutoFlow:     'column',
+          gridAutoColumns:  '280px',
+          gap:              16,
+          flex:             1,
+          minHeight:        0,
+          overflowX:        'auto',
+          overflowY:        'hidden',
+          paddingBottom:    8,
+          alignItems:       'stretch',
+        }}
+      >
         {COLUMNS.map((col) => (
           <KanbanColumn
             key={col.id}
