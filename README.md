@@ -12,7 +12,11 @@ It is the full core product and runs on its own; the enterprise modules are sepa
 <!-- ASSET: hero screenshot (editor + connected Claude) -->
 <!-- ASSET: 30s demo GIF (ask Claude → it reads a doc → proposes an edit → Approve) -->
 
-## Quickstart (self-host, ~90 seconds)
+## Quickstart (self-host in a few minutes)
+
+Clone to a live MCP endpoint in about 4 minutes — a one-time image build. (A
+stone-cold first-ever build can take longer; it's I/O-bound on Docker's
+filesystem, not downloads. Native Linux is as fast or faster.)
 
 Requirements: **Docker + Docker Compose**. (Working on the code itself, outside
 Docker? **Node 22** — `nvm use` picks it up from [`.nvmrc`](./.nvmrc) — and
