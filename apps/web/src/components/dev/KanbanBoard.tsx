@@ -129,6 +129,25 @@ export function KanbanBoard({ workspaceId }: KanbanBoardProps): JSX.Element {
     return () => { el.removeEventListener('wheel', onWheel); };
   }, [loading, error]);
 
+  // Keyboard shortcut: press "n" to open the Add task modal. Ignored while the
+  // user is typing in a field or when a modal already owns the keyboard, and it
+  // leaves modifier combos (⌘/Ctrl/Alt) alone so browser + command-palette
+  // (⌘/Ctrl+K) shortcuts keep working.
+  useEffect(() => {
+    function onKeyDown(e: KeyboardEvent) {
+      if (e.key !== 'n' && e.key !== 'N') return;
+      if (e.metaKey || e.ctrlKey || e.altKey) return;
+      if (showAddModal || selectedTask) return;
+      const active = document.activeElement as HTMLElement | null;
+      const tag = active?.tagName;
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || active?.isContentEditable) return;
+      e.preventDefault();
+      setShowAddModal(true);
+    }
+    window.addEventListener('keydown', onKeyDown);
+    return () => { window.removeEventListener('keydown', onKeyDown); };
+  }, [showAddModal, selectedTask]);
+
   // Check if banner was previously dismissed
   useEffect(() => {
     const dismissed = localStorage.getItem(`mnema_setup_banner_${workspaceId}`);
@@ -482,7 +501,12 @@ export function KanbanBoard({ workspaceId }: KanbanBoardProps): JSX.Element {
 
         <button
           onClick={() => { setShowAddModal(true); }}
+          aria-keyshortcuts="n"
+          title="Add task (press N)"
           style={{
+            display:      'inline-flex',
+            alignItems:   'center',
+            gap:          7,
             padding:      '7px 16px',
             borderRadius: 8,
             border:       'none',
@@ -496,6 +520,16 @@ export function KanbanBoard({ workspaceId }: KanbanBoardProps): JSX.Element {
           }}
         >
           + Add task
+          <kbd style={{
+            padding:      '1px 6px',
+            borderRadius: 4,
+            background:   'rgba(10,11,13,0.16)',
+            border:       '0.5px solid rgba(10,11,13,0.24)',
+            fontSize:     10.5,
+            fontFamily:   T.fontMono,
+            fontWeight:   600,
+            lineHeight:   1.5,
+          }}>N</kbd>
         </button>
       </div>
 
