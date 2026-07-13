@@ -126,7 +126,7 @@ const workspaceName = domainPart
 
   <!-- STATUS LEFT -->
   <Fragment slot="status-left">
-    <span style="font:500 11px/1 var(--mono);color:var(--ink-muted);">Google Drive · planned · Phase 10</span>
+    <span style="font:500 11px/1 var(--mono);color:var(--ink-muted);">Google Drive · folder sync</span>
   </Fragment>
 
   <!-- MAIN CONTENT -->
@@ -146,7 +146,7 @@ const workspaceName = domainPart
       </h1>
       <p class="dr-sub">Sync content from Google Drive as Mnema docs. Files appear in your workspace as if they were native.</p>
 
-      <!-- PLACEHOLDER CARD -->
+      <!-- CONNECT / MANAGE CARD -->
       <div class="dr-placeholder">
         <div class="dr-ico">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
@@ -156,24 +156,12 @@ const workspaceName = domainPart
             <line x1="10" y1="16" x2="10.01" y2="16"/>
           </svg>
         </div>
-        <h2>Google Drive sync — coming soon</h2>
-        <p>Once available, you'll connect your Drive account here and choose which folders Mnema should mirror as content. Until then, drag content into the workspace as markdown docs.</p>
-        <span class="dr-coming"><span class="sig"></span>Drive sync · planned for Phase 10</span>
-      </div>
-
-      <!-- NOTIFY BLOCK -->
-      <div class="dr-notify">
-        <div class="dr-notify-body">
-          <div class="dr-notify-title">Notify me when it's ready</div>
-          <div class="dr-notify-sub">We'll email you once Drive sync ships in Phase 10. No other messages.</div>
-        </div>
-        <form class="dr-notify-form" onsubmit="return false;">
-          <input type="email" id="dr-notify-email" placeholder="you@workplace.com" value={auth.email} />
-          <button class="dr-notify-btn" type="button" id="dr-notify-btn">
-            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22 6 12 13 2 6"/></svg>
-            <span id="dr-notify-label">Notify me</span>
-          </button>
-        </form>
+        <h2>Two-way folder sync</h2>
+        <p>Link a Mnema folder to a Google Drive folder and keep their files in sync both ways — add a file in either place and it shows up in the other, for the file types you allow. Connect your account and manage links in Settings.</p>
+        <a class="dr-notify-btn" href="/app/settings/integrations" style="text-decoration:none;">
+          Open Drive settings
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+        </a>
       </div>
 
       <!-- OTHER WAYS -->
@@ -213,21 +201,5 @@ const workspaceName = domainPart
 
     </div>
   </div>
-
-  <script>
-    const btn = document.getElementById('dr-notify-btn');
-    const label = document.getElementById('dr-notify-label');
-    const input = document.getElementById('dr-notify-email') as HTMLInputElement | null;
-    btn?.addEventListener('click', () => {
-      const ok = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input?.value.trim() ?? '');
-      if (!ok) { input?.focus(); return; }
-      btn.classList.add('success');
-      if (label) label.textContent = "You're on the list ✓";
-      setTimeout(() => {
-        btn.classList.remove('success');
-        if (label) label.textContent = 'Notify me';
-      }, 2400);
-    });
-  </script>
 
 </AppLayout>
