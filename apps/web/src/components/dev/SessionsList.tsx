@@ -219,6 +219,20 @@ export function SessionsList({ workspaceId: _workspaceId }: SessionsListProps): 
     [filters, fetchSessions],
   );
 
+  const hasActiveFilters =
+    filters.status !== '' ||
+    filters.developerId !== '' ||
+    filters.agent !== '' ||
+    filters.from !== '' ||
+    filters.to !== '';
+
+  const clearFilters = useCallback(() => {
+    const cleared: Filters = { status: '', developerId: '', agent: '', from: '', to: '' };
+    setFilters(cleared);
+    setNextCursor(null);
+    void fetchSessions(cleared);
+  }, [fetchSessions]);
+
   // ── SSE subscription ────────────────────────────────────────────────────────
   useEffect(() => {
     const es = new EventSource('/api/notifications/stream', {
@@ -464,8 +478,74 @@ export function SessionsList({ workspaceId: _workspaceId }: SessionsListProps): 
         )}
 
         {!loading && sessions.length === 0 && (
-          <div style={{ padding: '28px 24px', color: T.textMuted, fontSize: 13 }}>
-            No sessions found.
+          <div style={{ padding: '48px 24px' }}>
+            <div style={{
+              display:        'flex',
+              flexDirection:  'column',
+              alignItems:     'center',
+              textAlign:      'center',
+              padding:        '48px 32px',
+              background:     T.surface1,
+              border:         `0.5px solid ${T.line}`,
+              borderRadius:   10,
+              fontFamily:     T.fontUI,
+            }}>
+              <div style={{
+                width:          48,
+                height:         48,
+                marginBottom:   18,
+                borderRadius:   10,
+                background:     T.surface2,
+                border:         `0.5px solid ${T.line}`,
+                display:        'inline-flex',
+                alignItems:     'center',
+                justifyContent: 'center',
+                color:          T.textSecondary,
+              }}>
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                  <rect x="3" y="4" width="18" height="16" rx="2" />
+                  <path d="M3 9h18" />
+                  <path d="M9 15l2 2 4-4" />
+                </svg>
+              </div>
+              <h3 style={{
+                margin:        '0 0 8px',
+                fontSize:      16,
+                fontWeight:    500,
+                letterSpacing: '-0.01em',
+                color:         T.textPrimary,
+              }}>
+                {hasActiveFilters ? 'No matching sessions' : 'No sessions yet'}
+              </h3>
+              <p style={{
+                margin:     '0 auto 18px',
+                maxWidth:   '28rem',
+                fontSize:   13,
+                lineHeight: 1.55,
+                color:      T.textSecondary,
+              }}>
+                {hasActiveFilters
+                  ? 'No sessions match the current filters. Try adjusting or clearing them.'
+                  : 'Sessions will show up here as soon as your team starts running Claude Code.'}
+              </p>
+              {hasActiveFilters && (
+                <button
+                  onClick={clearFilters}
+                  style={{
+                    padding:      '7px 16px',
+                    fontSize:     12,
+                    background:   T.glass,
+                    border:       `0.5px solid ${T.glassBorder}`,
+                    borderRadius: 8,
+                    color:        T.textSecondary,
+                    cursor:       'pointer',
+                    fontFamily:   T.fontUI,
+                  }}
+                >
+                  Clear filters
+                </button>
+              )}
+            </div>
           </div>
         )}
 
