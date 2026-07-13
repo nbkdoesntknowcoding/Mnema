@@ -7,8 +7,9 @@ app** integration: the operator supplies a Google Cloud OAuth client (like the
 Voyage/Gemini API keys), then each user connects their own Google account.
 
 - **What syncs.** Files in a linked folder. Text files (`.md`, `.txt`) become
-  Mnema **docs** you can edit; other allowed types (`.pdf`, `.docx`, images, …)
-  become **attachments**. You choose the allowed types per link.
+  Mnema **docs** you can edit; `.pdf` and `.docx` become **attachments**. You
+  choose which of the supported types to sync per link. (More binary types can
+  follow in a later change.)
 - **What doesn't (yet).** Live collaborative editing of a doc's body into a Google
   Doc and back. Mnema exports a doc as a `.md` file to Drive; it doesn't drive
   Google Docs' own editor. Google Shared Drives are not supported in v1.
@@ -57,7 +58,7 @@ env vars. It's bring-your-own so nothing is baked into the image.
    GOOGLE_DRIVE_SCOPE=drive.file          # or 'drive' — see the scope note below
    ```
 3. `docker compose up -d --build` (the migration `0073_drive_sync.sql` applies
-   automatically). Binary files (`.pdf`, `.docx`, images) also need R2 configured
+   automatically). Binary files (`.pdf`, `.docx`) also need R2 configured
    (`R2_*`); text files sync without it.
 
 ### The scope choice
@@ -79,7 +80,6 @@ they didn't create through Mnema, and budget for Google's review.
 | `GOOGLE_DRIVE_REDIRECT_URI` | — | Must equal your `/api/drive/callback` URL |
 | `GOOGLE_DRIVE_SCOPE` | `drive.file` | `drive.file` (least priv) or `drive` (full) |
 | `DRIVE_SYNC_MAX_FILE_MB` | `50` | Skip Drive files larger than this |
-| `DRIVE_WEBHOOK_SECRET` | falls back to `SECRETBOX_MASTER_KEY` | Signs Drive push-channel tokens |
 
 The refresh token is encrypted at rest with `SECRETBOX_MASTER_KEY` (AES-256-GCM,
 the same secret-box used for calendar) — no extra secret needed.
@@ -96,9 +96,9 @@ the same secret-box used for calendar) — no extra secret needed.
 - **Pull** (Drive → Mnema) lists the linked folder, and for each accepted, changed
   file (by `md5Checksum`) writes/updates a doc or attachment.
 - **Push** (Mnema → Drive) exports the linked folder's docs to `.md` files.
-- A **BullMQ worker** (`drive-sync`) runs syncs triggered by *Sync now*, and by
-  Google **push notifications** (`POST /api/drive/webhook`) for near-real-time
-  pulls.
+- A **BullMQ worker** (`drive-sync`) runs the sync when you hit *Sync now* (and can
+  be driven by a reconcile cron). Live push-sync via Drive change notifications is
+  a planned follow-up.
 
 ## Troubleshooting
 
