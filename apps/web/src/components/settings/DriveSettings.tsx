@@ -4,7 +4,7 @@
  * Connect a Google account, then link Mnema folders to Drive folders with a
  * chosen direction + accepted file types. Talks to /api/drive/*.
  */
-import { type JSX, useEffect, useState } from 'react';
+import { type JSX, useEffect, useRef, useState } from 'react';
 
 interface DriveStatus {
   connected: boolean;
@@ -68,6 +68,7 @@ export function DriveSettings(): JSX.Element {
   const [loading, setLoading] = useState(true);
   const [banner, setBanner] = useState<string | null>(null);
   const [showAdd, setShowAdd] = useState(false);
+  const [confirmUnlink, setConfirmUnlink] = useState<string | null>(null);
 
   async function refresh() {
     const s = await api<DriveStatus>('/api/drive/status');
@@ -92,9 +93,9 @@ export function DriveSettings(): JSX.Element {
     catch (e) { setBanner((e as Error).message); }
   }
   async function unlink(id: string) {
-    if (!confirm('Unlink this folder? Synced docs stay in Mnema; the Drive folder is untouched.')) return;
     await api(`/api/drive/links/${id}`, { method: 'DELETE' });
     setLinks((prev) => prev.filter((l) => l.id !== id));
+    setConfirmUnlink(null);
   }
   async function togglePause(l: DriveLink) {
     const next = l.status === 'paused' ? 'active' : 'paused';
@@ -170,7 +171,26 @@ export function DriveSettings(): JSX.Element {
                   </div>
                   <button style={ghostBtn} onClick={() => void syncNow(l.id)}>Sync now</button>
                   <button style={ghostBtn} onClick={() => void togglePause(l)}>{l.status === 'paused' ? 'Resume' : 'Pause'}</button>
-                  <button style={{ ...ghostBtn, color: '#f87171', borderColor: 'rgba(248,113,113,0.4)' }} onClick={() => void unlink(l.id)}>Unlink</button>
+                  {confirmUnlink === l.id ? (
+                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+                      <span style={{ fontSize: 12, color: 'var(--ink-muted)' }}>Unlink?</span>
+                      <button
+                        style={{ ...ghostBtn, color: 'var(--status-error)', borderColor: 'var(--status-error)' }}
+                        title="Synced docs stay in Mnema; the Drive folder is untouched."
+                        onClick={() => void unlink(l.id)}
+                      >
+                        Confirm
+                      </button>
+                      <button style={ghostBtn} onClick={() => setConfirmUnlink(null)}>Cancel</button>
+                    </span>
+                  ) : (
+                    <button
+                      style={{ ...ghostBtn, color: 'var(--status-error)', borderColor: 'var(--status-error)' }}
+                      onClick={() => setConfirmUnlink(l.id)}
+                    >
+                      Unlink
+                    </button>
+                  )}
                 </div>
               ))}
             </div>
@@ -209,6 +229,34 @@ function AddLinkModal({ defaultTypes, onClose, onCreated }: {
     void api<{ folders: DriveFolder[] }>('/api/drive/folders').then((d) => setDriveFolders(d.folders ?? [])).catch(() => {});
   }, []);
 
+  // Dialog a11y: focus the dialog on open, trap Tab within it, close on Escape,
+  // and restore focus to the trigger on unmount. (onClose via ref so this runs once.)
+  const modalRef = useRef<HTMLDivElement>(null);
+  const onCloseRef = useRef(onClose);
+  onCloseRef.current = onClose;
+  useEffect(() => {
+    const node = modalRef.current;
+    const prevFocus = document.activeElement as HTMLElement | null;
+    const focusables = () => Array.from(
+      node?.querySelectorAll<HTMLElement>(
+        'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
+      ) ?? [],
+    );
+    focusables()[0]?.focus();
+    function onKeyDown(e: KeyboardEvent) {
+      if (e.key === 'Escape') { e.preventDefault(); onCloseRef.current(); return; }
+      if (e.key !== 'Tab') return;
+      const items = focusables();
+      if (items.length === 0) return;
+      const first = items[0]!;
+      const last = items[items.length - 1]!;
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    }
+    document.addEventListener('keydown', onKeyDown);
+    return () => { document.removeEventListener('keydown', onKeyDown); prevFocus?.focus(); };
+  }, []);
+
   function toggleType(t: string) {
     setTypes((prev) => (prev.includes(t) ? prev.filter((x) => x !== t) : [...prev, t]));
   }
@@ -238,8 +286,14 @@ function AddLinkModal({ defaultTypes, onClose, onCreated }: {
   return (
     <div style={{ position: 'fixed', inset: 0, zIndex: 100, background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(4px)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
       onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}>
-      <div style={{ ...card, width: 460, maxWidth: '92vw', display: 'flex', flexDirection: 'column', gap: 14 }}>
-        <h3 style={{ margin: 0, fontSize: 16, fontWeight: 700, color: 'var(--ink)' }}>Link a folder</h3>
+      <div
+        ref={modalRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="drive-add-title"
+        style={{ ...card, width: 460, maxWidth: '92vw', display: 'flex', flexDirection: 'column', gap: 14 }}
+      >
+        <h3 id="drive-add-title" style={{ margin: 0, fontSize: 16, fontWeight: 700, color: 'var(--ink)' }}>Link a folder</h3>
 
         <div>
           <span style={label}>Mnema folder</span>
@@ -279,6 +333,7 @@ function AddLinkModal({ defaultTypes, onClose, onCreated }: {
               const on = types.includes(t);
               return (
                 <button key={t} onClick={() => toggleType(t)}
+                  aria-pressed={on}
                   style={{ padding: '3px 10px', borderRadius: 20, fontSize: 12, cursor: 'pointer',
                     border: `1px solid ${on ? 'var(--accent-line)' : 'var(--line-strong)'}`,
                     background: on ? 'var(--accent-soft)' : 'transparent',
@@ -290,7 +345,7 @@ function AddLinkModal({ defaultTypes, onClose, onCreated }: {
           </div>
         </div>
 
-        {error && <p style={{ margin: 0, fontSize: 13, color: '#f87171' }}>{error}</p>}
+        {error && <p style={{ margin: 0, fontSize: 13, color: 'var(--status-error)' }}>{error}</p>}
 
         <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8 }}>
           <button style={ghostBtn} onClick={onClose}>Cancel</button>
