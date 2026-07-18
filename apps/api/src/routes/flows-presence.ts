@@ -63,7 +63,12 @@ function broadcast(room: Map<string, Peer>, exceptConnId: string, msg: unknown) 
 export async function flowPresenceRoutes(app: FastifyInstance) {
   app.get<{ Params: { id: string } }>(
     '/ws/flows/:id/presence',
-    { websocket: true },
+    {
+      websocket: true,
+      // Rate-limit the upgrade handshake so a flood of connection attempts can't
+      // hammer verifyJwt + the flow-exists DB lookup (js/missing-rate-limiting).
+      config: { rateLimit: { max: 30, timeWindow: '1 minute' } },
+    },
     async (socket, req) => {
       const flowId = req.params.id;
 
