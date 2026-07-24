@@ -24,6 +24,7 @@ import { docsRoutes } from './routes/docs.js';
 import { decisionApprovalsRoutes } from './routes/decision-approvals.js';
 import { searchRoutes } from './routes/search.js';
 import { foldersRoutes } from './routes/folders.js';
+import { collaboratorsRoutes } from './routes/collaborators.js';
 import { mcpTokenRoutes } from './routes/mcp-tokens.js';
 import { flowsRoutes } from './routes/flows.js';
 import { flowPresenceRoutes } from './routes/flows-presence.js';
@@ -181,6 +182,7 @@ await app.register(openApiRoutes);
 await app.register(geminiRoutes);
 await app.register(installRoutes);
   await app.register(projectsRoutes);
+await app.register(collaboratorsRoutes);
 await app.register(documentFilesRoutes);
 await app.register(onlyofficeRoutes);
 // Phase 3 — mount the enterprise (ee) modules if present (dynamic import, so
